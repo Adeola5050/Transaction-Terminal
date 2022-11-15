@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 
 @Service
@@ -22,7 +23,7 @@ public class TransactionServiceImpl implements TransactionService{
     @Autowired
     TransactionRepository transactionRepository;
 
-    private Terminal getTerminal(Long id) throws TransactionTerminalApplicationException{
+    private Terminal findById(Long id) throws TransactionTerminalApplicationException{
        return terminalRepository.findById(id).orElseThrow(()-> new TransactionTerminalApplicationException("This terminal does not exist"));
 
 
@@ -30,20 +31,22 @@ public class TransactionServiceImpl implements TransactionService{
     @Override
     public void createTransactionObject(CreateTransactionDto dto) throws TransactionTerminalApplicationException {
         Transaction transaction= new Transaction();
-        Terminal terminal= getTerminal(dto.getTerminalId());
         transaction.setTransactionType(TransactionType.valueOf(dto.getTransactionType()));
         transaction.setAmount(dto.getAmount());
         transaction.setStartDate(dto.getStartDate());
         transaction.setEndDate(dto.getEndDate());
-        terminalRepository.save(terminal);
-        transactionRepository.save(transaction);
+        transaction.setUserName(dto.getUserName());
         transaction.setCreatedDate(LocalDateTime.now().toString());
+        transaction.setModifiedDate(LocalDateTime.now().toString());
+        transactionRepository.save(transaction);
+
+
+    }
+    public Transaction findByUserName(String name) throws TransactionTerminalApplicationException {
+            return transactionRepository.findByUserName(name);
 
     }
 
 
-    public boolean existByUserName(String name) throws TransactionTerminalApplicationException {
-       return transactionRepository.existsByUserName(name);
 
     }
-}

@@ -12,7 +12,6 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @Builder
 public class CreateTransactionDto {
-    private Long terminalId;
     private String startDate;
     private String endDate;
     private BigDecimal amount;

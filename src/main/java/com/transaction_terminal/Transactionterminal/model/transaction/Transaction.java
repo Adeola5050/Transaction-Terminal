@@ -19,6 +19,7 @@ public class Transaction {
     private String endDate;
     private BigDecimal amount;
     private String userName;
+    private String modifiedDate;
     @Enumerated
     private TransactionType transactionType;
 

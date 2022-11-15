@@ -2,6 +2,7 @@ package com.transaction_terminal.Transactionterminal.controller.transaction;
 
 import com.transaction_terminal.Transactionterminal.dto.CreateTransactionDto;
 import com.transaction_terminal.Transactionterminal.exception.TransactionTerminalApplicationException;
+import com.transaction_terminal.Transactionterminal.model.transaction.Transaction;
 import com.transaction_terminal.Transactionterminal.repository.transaction.TransactionRepository;
 import com.transaction_terminal.Transactionterminal.response.ResponseDetails;
 import com.transaction_terminal.Transactionterminal.service.transaction.TransactionServiceImpl;
@@ -30,13 +31,13 @@ public class TransactionController {
         return new ResponseEntity<>(responseDetails, HttpStatus.CREATED);
     }
 
-    @GetMapping("{name}")
-    public ResponseEntity<?> findByUserName(@PathVariable String name) throws TransactionTerminalApplicationException {
-        if (name == null) {
+    @GetMapping("{username}")
+    public ResponseEntity<?> findByUserName(@PathVariable String username) throws TransactionTerminalApplicationException {
+        if (username== null) {
             throw new TransactionTerminalApplicationException("User name is null");
 
         }
-        boolean transaction = transactionServiceimpl.existByUserName(name);
+        Transaction transaction = transactionServiceimpl.findByUserName(username);
         return new ResponseEntity<>(transaction, HttpStatus.OK);
 
     }
