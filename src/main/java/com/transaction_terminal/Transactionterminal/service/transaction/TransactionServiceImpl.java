@@ -1,6 +1,7 @@
 package com.transaction_terminal.Transactionterminal.service.transaction;
 
 import com.transaction_terminal.Transactionterminal.dto.CreateTransactionDto;
+import com.transaction_terminal.Transactionterminal.dto.FindTransactionByDateDto;
 import com.transaction_terminal.Transactionterminal.exception.TransactionTerminalApplicationException;
 import com.transaction_terminal.Transactionterminal.model.terminal.Terminal;
 import com.transaction_terminal.Transactionterminal.model.transaction.Transaction;
@@ -17,20 +18,21 @@ import java.util.Optional;
 
 @Service
 @Slf4j
-public class TransactionServiceImpl implements TransactionService{
+public class TransactionServiceImpl implements TransactionService {
     @Autowired
     TerminalRepository terminalRepository;
     @Autowired
     TransactionRepository transactionRepository;
 
-    private Terminal findById(Long id) throws TransactionTerminalApplicationException{
-       return terminalRepository.findById(id).orElseThrow(()-> new TransactionTerminalApplicationException("This terminal does not exist"));
+    private Terminal findById(Long id) throws TransactionTerminalApplicationException {
+        return terminalRepository.findById(id).orElseThrow(() -> new TransactionTerminalApplicationException("This terminal does not exist"));
 
 
     }
+
     @Override
     public void createTransactionObject(CreateTransactionDto dto) throws TransactionTerminalApplicationException {
-        Transaction transaction= new Transaction();
+        Transaction transaction = new Transaction();
         transaction.setTransactionType(TransactionType.valueOf(dto.getTransactionType()));
         transaction.setAmount(dto.getAmount());
         transaction.setStartDate(dto.getStartDate());
@@ -42,11 +44,27 @@ public class TransactionServiceImpl implements TransactionService{
 
 
     }
+
+
+    public FindTransactionByDateDto findTransactionByStartAndEndDate(Long id) throws TransactionTerminalApplicationException {
+        Transaction transaction = getTransaction(id);
+
+        return FindTransactionByDateDto.builder()
+                .startDate(transaction.getStartDate())
+                .endDate(transaction.getEndDate())
+                .build();
+    }
+
+    private Transaction getTransaction(Long id) throws TransactionTerminalApplicationException {
+        return transactionRepository.findById(id).orElseThrow(() ->
+                new TransactionTerminalApplicationException("This transaction does not exist"));
+    }
+
+
     public Transaction findByUserName(String name) throws TransactionTerminalApplicationException {
-            return transactionRepository.findByUserName(name);
+        return transactionRepository.findByUserName(name);
 
     }
 
 
-
-    }
+}

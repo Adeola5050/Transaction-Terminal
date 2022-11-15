@@ -1,6 +1,7 @@
 package com.transaction_terminal.Transactionterminal.controller.transaction;
 
 import com.transaction_terminal.Transactionterminal.dto.CreateTransactionDto;
+import com.transaction_terminal.Transactionterminal.dto.FindTransactionByDateDto;
 import com.transaction_terminal.Transactionterminal.exception.TransactionTerminalApplicationException;
 import com.transaction_terminal.Transactionterminal.model.transaction.Transaction;
 import com.transaction_terminal.Transactionterminal.repository.transaction.TransactionRepository;
@@ -33,12 +34,22 @@ public class TransactionController {
 
     @GetMapping("{username}")
     public ResponseEntity<?> findByUserName(@PathVariable String username) throws TransactionTerminalApplicationException {
-        if (username== null) {
+        if (username == null) {
             throw new TransactionTerminalApplicationException("User name is null");
 
         }
         Transaction transaction = transactionServiceimpl.findByUserName(username);
         return new ResponseEntity<>(transaction, HttpStatus.OK);
+
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<?> findTransactionByDate(@PathVariable Long id) throws TransactionTerminalApplicationException{
+        if(id == null){
+            throw new TransactionTerminalApplicationException("This transaction id is null");
+        }
+        FindTransactionByDateDto transaction = transactionServiceimpl.findTransactionByStartAndEndDate(id);
+        return new ResponseEntity<>(transaction,HttpStatus.OK);
 
     }
 }
